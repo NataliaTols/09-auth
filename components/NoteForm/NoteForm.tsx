@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import css from "./NoteForm.module.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "../../lib/api";
-import { useNoteDraftStore } from '@/lib/stores/noteStore';
+import { useNoteDraftStore } from '@/lib/store/noteStore';
 
 type TagType = "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
 

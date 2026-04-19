@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import { nextServer } from './api';
 import { Note } from '@/types/note';
 

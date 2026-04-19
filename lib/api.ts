@@ -4,23 +4,23 @@ import type { Note } from "../types/note";
 const myKey = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 const BASE_URL = "https://notehub-public.goit.study/api/notes";
 
-// ✅ Вынесли тип тегов в одно место (переиспользуемый)
+
 export type NoteTag = "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
 
-// ✅ Ответ API
+
 interface FetchNotesProps {
   notes: Note[];
   totalPages: number;
 }
 
-// ✅ Аргументы функции
+
 interface FetchNotesArgs {
-  tag?: NoteTag;      // 🔒 теперь строго типизирован
+  tag?: NoteTag;      
   search?: string;
   page?: number;
 }
 
-// ✅ Основная функция
+
 export async function fetchNotes({
   tag,
   search,
@@ -41,11 +41,11 @@ export async function fetchNotes({
   return response.data;
 }
 
-// ✅ Создание заметки
+
 interface CreateNoteProps {
   title: string;
   content: string;
-  tag: NoteTag; // переиспользуем тип
+  tag: NoteTag; 
 }
 
 export async function createNote(newPost: CreateNoteProps): Promise<Note> {
@@ -58,7 +58,7 @@ export async function createNote(newPost: CreateNoteProps): Promise<Note> {
   return response.data;
 }
 
-// ✅ Удаление
+
 export async function deleteNote(noteId: string): Promise<Note> {
   const response = await axios.delete<Note>(`${BASE_URL}/${noteId}`, {
     headers: {
@@ -69,7 +69,7 @@ export async function deleteNote(noteId: string): Promise<Note> {
   return response.data;
 }
 
-// ✅ Получение по id
+
 export async function fetchNoteById(id: string): Promise<Note> {
   const response = await axios.get<Note>(`${BASE_URL}/${id}`, {
     headers: {

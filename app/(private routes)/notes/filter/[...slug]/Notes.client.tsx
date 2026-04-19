@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
 import { useQuery } from '@tanstack/react-query';
-import { fetchNotes } from "@/lib/api";
-import type { NoteTag } from "@/lib/api";
+import { fetchNotes, NoteTag } from "@/lib/api/clientApi";
 import Link from "next/link";
 
 import css from "../../notes.module.css";
@@ -23,7 +22,7 @@ export default function NotesByFilterClient({ tag }: Props) {
 
   const [debouncedSearch] = useDebounce(search, 500);
 
-  const normalizedTag = tag === "all" ? undefined : (tag as NoteTag);
+  const normalizedTag = tag === "all" ? undefined : tag;
 
   const { data, isLoading } = useQuery({
     queryKey: ['notes', normalizedTag, debouncedSearch, page],
@@ -31,7 +30,7 @@ export default function NotesByFilterClient({ tag }: Props) {
     queryFn: () => fetchNotes({
   search: debouncedSearch,
   page,
-  tag: normalizedTag,
+  tag: normalizedTag as NoteTag,
 }),
 
     refetchOnMount: false,

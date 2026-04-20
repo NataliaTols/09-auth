@@ -17,14 +17,14 @@ export type RegisterRequest = {
 export type UserData = {
   id: string;
   email: string;
-  username?: string;
-  avatar?: string;
+  username: string;
+  avatar: string;
   createdAt: string;
   updatedAt: string;
 };
 
 export type UpdateUserRequest = {
-  username?: string;
+  username: string;
 };
 
 // Authentication endpoints

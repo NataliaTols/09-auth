@@ -1,4 +1,5 @@
-import axios from "axios";
+
+import axios, { AxiosError } from "axios";
 import { Note } from "@/types/note";
 import { User } from "@/types/user";
 import { nextServer } from "./api";
@@ -76,9 +77,14 @@ export const checkSession = async () => {
         Cookie: cookieStore.toString(),
       },
     });
-    return res.data;
+    return res;
   } catch (error) {
-    return { success: false };
+    // Return the error response if available, otherwise a default error object
+    const err = error as AxiosError;
+    if (err.response) {
+      return err.response;
+    }
+    return { status: 500, data: { success: false, message: 'Network error' } };
   }
 };
 

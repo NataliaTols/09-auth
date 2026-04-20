@@ -4,8 +4,6 @@ import { User } from "@/types/user";
 import { nextServer } from "./api";
 import { cookies } from "next/headers";
 
-const BASE_URL = "https://notehub-api.goit.study";
-
 export type NoteTag = "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
 
 export type FetchNotesResponse = {
@@ -24,36 +22,48 @@ export async function fetchNotes({
   search,
   page,
 }: FetchNotesArgs): Promise<FetchNotesResponse> {
-  const response = await axios.get<FetchNotesResponse>(`${BASE_URL}/notes`, {
+  const cookieStore = await cookies();
+  const response = await nextServer.get<FetchNotesResponse>('/notes', {
     params: {
       tag,
       search,
       page,
       perPage: 12,
     },
-    withCredentials: true,
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
   });
 
   return response.data;
 }
 
 export async function fetchNoteById(id: string): Promise<Note> {
-  const response = await axios.get<Note>(`${BASE_URL}/notes/${id}`, {
-    withCredentials: true,
+  const cookieStore = await cookies();
+  const response = await nextServer.get<Note>(`/notes/${id}`, {
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
   });
   return response.data;
 }
 
 export async function createNote(data: { title: string; content: string; tag: NoteTag }) {
-  const response = await axios.post<Note>(`${BASE_URL}/notes`, data, {
-    withCredentials: true,
+  const cookieStore = await cookies();
+  const response = await nextServer.post<Note>('/notes', data, {
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
   });
   return response.data;
 }
 
 export async function deleteNote(id: string): Promise<Note> {
-  const response = await axios.delete<Note>(`${BASE_URL}/notes/${id}`, {
-    withCredentials: true,
+  const cookieStore = await cookies();
+  const response = await nextServer.delete<Note>(`/notes/${id}`, {
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
   });
   return response.data;
 }
@@ -66,7 +76,7 @@ export const checkSession = async () => {
         Cookie: cookieStore.toString(),
       },
     });
-    return { success: true };
+    return res.data;
   } catch (error) {
     return { success: false };
   }
@@ -79,5 +89,9 @@ export const getMe = async (): Promise<User> => {
       Cookie: cookieStore.toString(),
     },
   });
-  return data;
+  return {
+    email: data.email,
+    username: data.userName || '',
+    avatar: data.photoUrl || '',
+  };
 };

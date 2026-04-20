@@ -23,9 +23,9 @@ export default function EditProfilePage() {
       try {
         const userData = await getMe();
         if (userData) {
-          setUserName(userData.userName || '');
+          setUserName(userData.username || '');
           setEmail(userData.email || '');
-          setAvatar(userData.photoUrl || '');
+          setAvatar(userData.avatar || '');
         }
       } catch (err) {
         setError('Failed to load user data');
@@ -44,7 +44,8 @@ export default function EditProfilePage() {
     setError('');
 
     try {
-      await updateMe({ userName });
+      const updatedUser = await updateMe({ username: userName });
+      useAuthStore.getState().setUser(updatedUser);
       router.push('/profile');
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;

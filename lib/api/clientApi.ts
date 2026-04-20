@@ -11,20 +11,20 @@ export type LoginRequest = {
 export type RegisterRequest = {
   email: string;
   password: string;
-  userName: string;
+  username: string;
 };
 
 export type UserData = {
   id: string;
   email: string;
-  userName?: string;
-  photoUrl?: string;
+  username?: string;
+  avatar?: string;
   createdAt: string;
   updatedAt: string;
 };
 
 export type UpdateUserRequest = {
-  userName?: string;
+  username?: string;
 };
 
 // Authentication endpoints

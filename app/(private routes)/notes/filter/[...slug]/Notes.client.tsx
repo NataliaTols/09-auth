@@ -64,19 +64,20 @@ export default function NotesByFilterClient({ tag }: Props) {
       ) : (
 
         hasNotes ? (
-          <NoteList notes={data.notes} />
+          <>
+            <NoteList notes={data.notes} />
+            <Pagination
+              currentPage={page}
+              pageCount={data?.totalPages || 1}
+              onPageChange={setPage}
+            />
+          </>
         ) : (
           <div className={css.empty}>
             <p>No notes found.</p>
           </div>
         )
       )}
-
-      <Pagination
-        currentPage={page}
-        pageCount={data?.totalPages || 1}
-        onPageChange={setPage}
-      />
     </div>
   );
 }

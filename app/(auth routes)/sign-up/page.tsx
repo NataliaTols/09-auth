@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { register } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
 import { AxiosError } from "axios";
 import css from "./SignUpPage.module.css";
 
@@ -19,11 +20,12 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     try {
-      await register({
+      const user = await register({
         email,
         password,
-        userName: email.split("@")[0],
+        username: email.split("@")[0],
       });
+      useAuthStore.getState().setUser(user);
       router.push("/profile");
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;

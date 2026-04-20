@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '@/lib/api/clientApi';
+import { useAuthStore } from '@/lib/store/authStore';
 import { AxiosError } from 'axios';
 import css from './SignInPage.module.css';
 
@@ -19,7 +20,8 @@ export default function SignInPage() {
     setIsLoading(true);
 
     try {
-      await login({ email, password });
+      const user = await login({ email, password });
+      useAuthStore.getState().setUser(user);
       router.push('/profile');
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;

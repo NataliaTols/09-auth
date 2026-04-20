@@ -2,16 +2,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import axios from 'axios';
+import { refreshSession } from './lib/api/serverApi';
 
 const publicRoutes = ['/sign-in', '/sign-up'];
 const privateRoutes = ['/profile', '/notes'];
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://notehub-api.goit.study';
-
 export async function proxy(request: NextRequest) {
   const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
+  
 
   const pathname = new URL(request.url).pathname;
   const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
@@ -28,22 +26,11 @@ export async function proxy(request: NextRequest) {
   } else if (refreshToken) {
     // Try to refresh session
     try {
-      const refreshResponse = await axios.post(`${BASE_URL}/auth/refresh`, {}, {
-        headers: {
-          Cookie: cookieHeader,
-        },
-      });
+      const result = await refreshSession();
 
-      if (refreshResponse.status === 200) {
-        // Update cookies with new tokens from set-cookie header
-        const setCookieHeader = refreshResponse.headers['set-cookie'];
-        if (setCookieHeader) {
-          setCookieHeader.forEach((cookie) => {
-            response.headers.append('Set-Cookie', cookie);
-          });
-          isAuthenticated = true;
-        }
-      }
+if ('data' in result && result.data.success) {
+  isAuthenticated = true;
+}
     } catch (error) {
       // Refresh failed, remain not authenticated
     }

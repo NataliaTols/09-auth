@@ -88,6 +88,24 @@ export const checkSession = async () => {
   }
 };
 
+export const refreshSession = async () => {
+  const cookieStore = await cookies();
+  try {
+    const res = await nextServer.post('/auth/refresh', {}, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
+    return res;
+  } catch (error) {
+    const err = error as AxiosError;
+    if (err.response) {
+      return err.response;
+    }
+    return { status: 500, data: { success: false, message: 'Network error' } };
+  }
+};
+
 export const getMe = async (): Promise<User> => {
   const cookieStore = await cookies();
   const { data } = await nextServer.get('/users/me', {
